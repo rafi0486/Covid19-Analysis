@@ -1,0 +1,18 @@
+//State Wise View of Mohf Data
+create view mohfw_state as
+SELECT (mid+(select max(mid) from mohfw_data_log)) as mid,cur_date,state_name,(total_cases_ind+total_cases_for) as total_cases,total_cases_ind,total_cases_for,recovered,deaths from mohfw_data union SELECT mid,cur_date,state_name,(total_cases_ind+total_cases_for) as total_cases,total_cases_ind,total_cases_for,recovered,deaths from mohfw_data_log   order by mid,cur_date,state_name
+
+//state Day wise
+
+create view mohf_state_daywise as select cur_date,state_name,max(total_cases) as total_cases,max(total_cases_ind) as total_cases_ind,max(total_cases_for) as total_cases_for,max(recovered) as recovered,max(deaths) as deaths from (SELECT (mid+(select max(mid) from mohfw_data_log)) as mid,cur_date,state_name,(total_cases_ind+total_cases_for) as total_cases,total_cases_ind,total_cases_for,recovered,deaths from mohfw_data union SELECT mid,cur_date,state_name,(total_cases_ind+total_cases_for) as total_cases,total_cases_ind,total_cases_for,recovered,deaths from mohfw_data_log order by mid,cur_date,state_name) x group by cur_date,state_name
+
+
+//India's day wise
+create view mohf_india as select cur_date,sum(total_cases) as total_cases,sum(total_cases_ind) as total_cases_ind,sum(total_cases_for) as total_cases_for,sum(recovered) as recovered,sum(deaths) as deaths from( select cur_date,state_name,max(total_cases) as total_cases,max(total_cases_ind) as total_cases_ind,max(total_cases_for) as total_cases_for,max(recovered) as recovered,max(deaths) as deaths from (SELECT (mid+(select max(mid) from mohfw_data_log)) as mid,cur_date,state_name,(total_cases_ind+total_cases_for) as total_cases,total_cases_ind,total_cases_for,recovered,deaths from mohfw_data union SELECT mid,cur_date,state_name,(total_cases_ind+total_cases_for) as total_cases,total_cases_ind,total_cases_for,recovered,deaths from mohfw_data_log   order by mid,cur_date,state_name)  x group by  cur_date,state_name) x group by cur_date  
+
+
+
+
+
+
+
